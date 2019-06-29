@@ -1,0 +1,188 @@
+---
+title: ""
+output: pdf_document
+geometry: bmargin=0.5cm, height=10in, scale=1.0, includefoot, hscale = 0.9
+header-includes:
+- \usepackage{fancyhdr}
+- \pagestyle{fancy}
+- \fancyfoot[CO,CE]{Any missing data was either not collected, or not of sufficient quality to report.}
+---
+
+```{r setup, include=FALSE}
+# Set up defaults for rmd document
+knitr::opts_chunk$set(
+  echo = FALSE,
+  eval = TRUE,
+  message = FALSE,
+  warning = FALSE,
+  out.width = '100%',
+  out.height = '100%',
+  dpi = 300
+  )
+```
+
+```{r dataFilters}
+# Filter the data for the report
+trial_data <- trial_data_cleaned_tbl %>% filter(study_id == !!study_id)
+biomarkers_data <- biomarkers_tbl %>% filter(study_id == !!study_id)
+other_metrics_data <- other_metrics_tbl %>% filter(study_id == !!study_id)
+```
+
+
+```{r mccaigLogo, out.width='30%'}
+# add Mccaig logo to top of page
+knitr::include_graphics('../02_Imgs/mccaig_logo.pdf')
+```
+
+```{r page1Header, fig.align = 'left'}
+# Page 1 header
+header_table_function(data = trial_data) %>% 
+  kable(format = 'pandoc', digits = 1, align = 'c', caption = 'Identifiers')
+```
+
+```{r generalMetricsTable}
+# General metrics table near top of page 1
+general_metrics_tbl_function(data = trial_data)
+```
+
+```{r biomarkersPlot}
+# Creates the biomarkers plots
+a <- line_plot_function(data = biomarkers_data,
+                   metric = 'Vitamin D',
+                   title = 'Vitamin D \n (nmol/L)',
+                   xlab = '',
+                   #nudge_y = 2,
+                   include_normal_rng = TRUE,
+                   y_axis_min = 50,
+                   y_axis_max = 350,
+                   include_labels = TRUE,
+                   accuracy = 1)
+
+b <- line_plot_function(data = biomarkers_data,
+                   metric = 'CTx',
+                   title = 'CTx \n (ng/L)',
+                   xlab = '',
+                   #nudge_y = 2,
+                   include_normal_rng = FALSE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 1)
+
+c <- line_plot_function(data = biomarkers_data,
+                   metric = 'Parathyroid Hormone',
+                   title = 'Parathyroid Hormone \n (ng/L)',
+                   xlab = '',
+                   #nudge_y = 2,
+                   include_normal_rng = TRUE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 1)
+
+d <- line_plot_function(data = biomarkers_data,
+                   metric = 'Serum Calcium',
+                   title = 'Serum Calcium \n (mmol/L)',
+                   xlab = 'Months',
+                   nudge_y = 0.1,
+                   include_normal_rng = TRUE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 2)
+
+e <- line_plot_function(data = biomarkers_data,
+                   metric = 'Fasting Glucose',
+                   title = 'Fasting Glucose \n (mmol/L)',
+                   xlab = 'Months',
+                   nudge_y = 0.1,
+                   include_normal_rng = TRUE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 1)
+
+f <- line_plot_function(data = biomarkers_data,
+                   metric = 'Hemoglobin',
+                   title = 'Hemoglobin A1C \n (%)',
+                   xlab = 'Months',
+                   nudge_y = 0.1,
+                   include_normal_rng = TRUE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 1)
+
+plot_grid(a,b,c,d,e,f,scale = c(1,1,1,1,1,1), ncol = 3)
+```
+
+\pagebreak
+
+```{r page2Header}
+header_table_function(trial_data) %>% 
+  kable(format = 'markdown', digits = 1, align = 'c')
+```
+
+```{r otherMetricsPlot}
+a <- multi_line_plot_function(data = other_metrics_data,
+                   metric = c('TH_aBMD','LS_aBMD','rad_33_aBMD'),
+                   title = 'DXA BMD \n (g/cm^2)',
+                   xlab = '')
+
+b <-line_plot_function(data = other_metrics_data,
+                   metric = 'ttbmd_r',
+                   title = 'BMD Radius \n (mg HA/cm^3)',
+                   xlab = '',
+                   #nudge_y = 2,
+                   include_normal_rng = TRUE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 0)
+
+c <- line_plot_function(data = other_metrics_data,
+                   metric = 'ttbmd_t',
+                   title = 'BMD Tibia \n (mg HA/cm^3)',
+                   xlab = '',
+                   #nudge_y = 2,
+                   include_normal_rng = TRUE,
+                   #y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = TRUE,
+                   accuracy = 0)
+
+d <- multi_line_plot_function(data = other_metrics_data,
+                   metric = c('failload_t','failload_r'),
+                   title = 'Bone Strength \n (N)',
+                   xlab = '')
+
+e <- line_plot_function(data = other_metrics_data,
+                   metric = 'Balance_mean',
+                   title = 'Balance \n (Sway Index)',
+                   xlab = 'Months',
+                   nudge_y = 0.3,
+                   include_normal_rng = TRUE,
+                   y_axis_min = 1.5,
+                   #y_axis_max = 3.5,
+                   include_labels = FALSE,
+                   accuracy = 1)
+
+f <- line_plot_function(data = other_metrics_data,
+                   metric = 'Grip_mean',
+                   title = 'Grip Strength \n (kg)',
+                   xlab = 'Months',
+                   nudge_y = 0.3,
+                   include_normal_rng = TRUE,
+                   accuracy = 1,
+                   #y_axis_max = 3.5,
+                   y_axis_min = 15,
+                   )
+
+first_row <- plot_grid(a,b,c,ncol=3, scale = c(1,1,1))
+second_row <- plot_grid(d,e,f,ncol = 3, scale = c(1,1,1))
+
+# Put the plots all in the grid
+plot_grid(first_row,second_row,nrow = 2)
+
+```
+

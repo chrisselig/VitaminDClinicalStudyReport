@@ -1,0 +1,16 @@
+variable,variable_label,units
+vitd_nmol_l,Vitamin D,nmol/L
+CTx ,CTx,ng/L
+PTH ,Parathyroid Hormone ,ng/L
+Serum Calcium ,Serum Calcium ,nmol/L
+LS_aBMD,Lumbar Spine,g/cm^2^
+TH_aBMD,Total Hip,g/cm^2^
+rad_33_aBMD,Radius,g/cm^2^
+ttbmd_r,3D Total BMD Radius ,mg HA/cm^3^
+ttbmd_t,3D Total BMD Tibia,mg HA/cm^3^
+failload_r,Radius,N
+failload_t,Tibia,N
+Balance_mean,Balance ,
+Grip_mean,Grip Strength ,Kg
+fasting_glucose,Fasting Glucose,nmol/L
+hemoglobin,Hemoglobin,%
